@@ -1,2 +1,3 @@
 numpy==1.14.3
 xgboost==0.81
+websockets==5.0.1
