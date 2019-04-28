@@ -5,6 +5,8 @@ import sys
 from importlib import reload
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
 
 
 reload(sys)
@@ -17,6 +19,7 @@ def new_client(client, server):
 
 
 def client_left(client, server):
+    print(server)
     print("Client disconnected")
     # print("Client(%d) disconnected" % client['id'])
 
@@ -25,22 +28,19 @@ def message_back(client, server, message):
     # data from client side
     print("Client(%d) said: %s" % (client['id'], message))
     # process the data
-    f1 = message.split('*')[0]
-    f2 = message.split('*')[1]
-    f3 = message.split('*')[2]
-    result = handle_feature(f1, f2, f3)
+    f1 = int(message.split('*')[0])
+    f2 = int(message.split('*')[1])
+    f3 = int(message.split('*')[2])
+    f4 = int(message.split('*')[2])
+    f5 = int(message.split('*')[2])
+    print(type(f1))
+    print(type(f4))
+    result = str(handle_feature(f1, f2, f3, f4, f5))
     # sand back to client side
     server.send_message(client, result)
 
 # @TODO need to change the function to correct one
-# def handle_feature(text):
-#     f1 = text.split('*****')[0]
-#     f2 = text.split('*****')[1]
-#     result = "Calculation reuslt is " + f1 + f2 + "(Test version)"
-#     return result
-
-
-def handle_feature(OverallQual, GrLivArea, TotalBsmtSF):
+def handle_feature(GrLivArea, LotArea, BsmtFinSF1, OverallQual, TotalBsmtSF):
     train = pd.read_csv("train.csv")
 
     train['MSZoning'] = pd.factorize(train['MSZoning'])[0]
@@ -88,22 +88,26 @@ def handle_feature(OverallQual, GrLivArea, TotalBsmtSF):
     train['BsmtCond'] = pd.factorize(train['BsmtCond'])[0]
 
     train = train.fillna(-1)
-
-    train.set_index('Id')
+    train = train.set_index('Id')
     X = train.loc[:, train.columns != 'SalePrice']
     y = np.array(train['SalePrice']).tolist()
-    regr = RandomForestRegressor(max_depth=20, random_state=0, n_estimators=30)
-    regr.fit(X, y)
-    feature_names = list(train.columns.values)[1:]
-    array = [-1]*80
+
+    model = XGBRegressor()
+    model.fit(X, y)
+    feature_names = list(X.columns.values)
+
+    array = [-1] * 79
     predict_df = pd.DataFrame([array], columns=feature_names)
-    predict_df['OverallQual'] = [OverallQual]
     predict_df['GrLivArea'] = [GrLivArea]
+    predict_df['LotArea'] = [LotArea]
+    predict_df['BsmtFinSF1'] = [BsmtFinSF1]
+    predict_df['OverallQual'] = [OverallQual]
     predict_df['TotalBsmtSF'] = [TotalBsmtSF]
-    regr.predict(predict_df)
-    print(regr.predict(predict_df)[0])
-    result = str(regr.predict(predict_df)[0])
-    return result
+
+    model.predict(predict_df)
+    print(model.predict(predict_df)[0])
+    return model.predict(predict_df)[0]
+
 
 # predict_price(10, 1000, 1000)
 
