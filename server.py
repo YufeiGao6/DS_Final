@@ -27,11 +27,11 @@ def message_back(client, server, message):
     # data from client side
     print("Client(%d) said: %s" % (client['id'], message))
     # process the data
-    f1 = int(message.split('*')[0])
-    f2 = int(message.split('*')[1])
-    f3 = int(message.split('*')[2])
-    f4 = int(message.split('*')[2])
-    f5 = int(message.split('*')[2])
+    f1 = message[0]
+    f2 = message[1]
+    f3 = message[2]
+    f4 = message[3]
+    f5 = message[4]
     print(type(f1))
     print(type(f4))
     result = str(handle_feature(f1, f2, f3, f4, f5))

@@ -12,10 +12,11 @@ function sendFeatureInfo() {
     var f4 = input_f4.value;
     var f5 = input_f5.value;
 
-    var featureInfo = f1 + "*" + f2 + "*" + f3 + "*" + f4 + "*" + f5;
+    //var featureInfo = f1 + "*" + f2 + "*" + f3 + "*" + f4 + "*" + f5;
+    var featureInfo = [f1, f2,f3, f4,f5];
 
     // open the link
-    var ws = new WebSocket("ws://localhost:4200");
+    var ws = new WebSocket("ws://localhost:8080/");
 
     // send the data by using the send()
     ws.onopen = function () {
