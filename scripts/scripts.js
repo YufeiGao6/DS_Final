@@ -16,7 +16,7 @@ function sendFeatureInfo() {
     var featureInfo = [f1, f2,f3, f4,f5];
 
     // open the link
-    var ws = new WebSocket("ws://localhost:8080/");
+    var ws = new WebSocket("ws://echo.websocket.org ");
 
     // send the data by using the send()
     ws.onopen = function () {
@@ -27,9 +27,10 @@ function sendFeatureInfo() {
     ws.onmessage = function (evt) {
         var received_msg = evt.data;
         alert(received_msg);
-        ws.close(); //close after the data is received
+        //ws.close(); //close after the data is received
     };
     // event after close
     ws.onclose = function () {
+        alert("连接已关闭...");
     };
 }
