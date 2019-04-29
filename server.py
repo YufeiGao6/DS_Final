@@ -111,7 +111,7 @@ def handle_feature(GrLivArea, LotArea, BsmtFinSF1, OverallQual, TotalBsmtSF):
 # predict_price(10, 1000, 1000)
 
 
-server = WebsocketServer(4200, host='')
+server = WebsocketServer(8080, host='')
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_back)
